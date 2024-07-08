@@ -1,0 +1,5 @@
+name: tlf_call_template
+description: >
+    Tables, Listings and Figures (TLF) template.
+    This template is only initiated for A&R project specific package, and it should be saved in vignettes folder.
+create_dir: FALSE

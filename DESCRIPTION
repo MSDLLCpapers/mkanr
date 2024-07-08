@@ -1,0 +1,38 @@
+Package: mkanr
+Type: Package
+Title: Demo R package
+Version: 0.0.1
+Authors@R: c(
+        person("Jean", "Muller"),
+        person("Ligia", "Adamska"),
+	person("BARDS, Merck & Co., Inc.", role = c("cph"))
+    )
+Description: Demo Package to illustrate how to leverage on the layered design.
+Depends: R (>= 3.6.0)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    dplyr,
+    flexsurv,
+    ggplot2,
+    glue,
+    haven,
+    purrr,
+    r2rtf,
+    rlang,
+    stringr,
+    survival,
+    tibble,
+    tidyr
+Suggests:
+    covr,
+    devtools,
+    knitr,
+    rmarkdown,
+    striprtf,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1

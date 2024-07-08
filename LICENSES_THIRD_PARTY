@@ -1,0 +1,36 @@
+mkanr uses third-party R packages which may be distributed under different
+licenses. We have listed all of these third party packages and their licenses
+below. However, the most up-to-date information can be found via inspecting
+the Imports field in the DESCRIPTION file.
+
+You must agree to the terms of these licenses, in addition to the mkanr
+source code license, in order to use this software.
+
+--------------------------------------------------
+Third party R packages listed by License type
+[Format: Name - URL]
+--------------------------------------------------
+
+MIT / X11 License (or adaptations) (https://www.opensource.org/licenses/MIT)
+  * dplyr - https://dplyr.tidyverse.org/LICENSE.html
+  * tibble - https://tibble.tidyverse.org/LICENSE.html
+  * tidyr - https://tidyr.tidyverse.org/LICENSE.html
+  * ggplot2 - https://cran.r-project.org/web/packages/ggplot2/LICENSE
+  * glue - https://cran.r-project.org/web/packages/glue/LICENSE
+  * haven - https://cran.r-project.org/web/packages/haven/LICENSE
+  * purrr - https://cran.r-project.org/web/packages/purrr/LICENSE
+  * rlang - https://cran.r-project.org/web/packages/rlang/LICENSE
+  * stringr - https://cran.r-project.org/web/packages/stringr/LICENSE
+  * covr - https://cran.r-project.org/web/packages/covr/LICENSE
+  * devtools - https://cran.r-project.org/web/packages/devtools/LICENSE
+  * striprtf - https://cran.r-project.org/web/packages/striprtf/LICENSE
+  * testthat - https://cran.r-project.org/web/packages/testthat/LICENSE
+
+GPL-2 | GPL-3 (https://opensource.org/license/gpl-2-0)
+  * flexsurv - https://www.r-project.org/COPYING
+  * survival - https://www.r-project.org/COPYING 
+  * knitr - https://www.r-project.org/COPYING 
+  * rmarkdown - https://www.r-project.org/COPYING 
+
+GPL-3 (https://opensource.org/license/gpl-3-0)
+  * r2rtf - https://github.com/MSDLLCpapers/r2rtf/blob/main/LICENSE

@@ -1,0 +1,4 @@
+"","Survival Model","AIC","BIC","Mean AIC BIC","Rank AIC","Rank BIC","Rank Mean AIC BIC"
+"1","Spline on hazard - 1 knot",631.983232658072,640.676752057925,636.329992357999,2,1,2
+"2","Spline on odds - 2 knots",630.365814662295,641.957173862099,636.161494262197,1,2,1
+"3","Spline on normal - 1 knots",634.001054711191,642.694574111043,638.347814411117,3,3,3

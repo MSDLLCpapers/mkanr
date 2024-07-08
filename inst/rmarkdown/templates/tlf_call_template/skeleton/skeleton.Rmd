@@ -1,0 +1,211 @@
+---
+title: Analysis & Reporting - TLF Package - <population>, <endpoint> #Change here
+output:
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '2'
+  word_document:
+    toc: yes
+    toc_depth: '2'
+  html_notebook:
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+<style>
+    body .main-container {
+        max-width: 2000px;
+    }
+</style>
+
+```{r setup, message=FALSE}
+# Program Initiation
+rm(list=ls())
+
+# Paths
+home<-tempdir()
+path <- lapply(list(home      = "", 
+                    adam      = "adam",
+                    document  = "documents",
+                    outtable  = "table",  
+                    outgraph  = "graph",
+                    outdata   = "outdata"    
+                    ), function(x) {full_path=file.path(home, x);
+                    if(!dir.exists(full_path)) dir.create(full_path, recursive = TRUE);
+                    full_path})
+
+```
+
+```{r, meta}
+# Meta information 
+requestor <- person("first_name", "last_name", email = "name@email.com")         # Requestor 
+developer <- person("first_name", "last_name", email = "name@email.com")         # Developer
+
+request_date  <- "YYYY-MM-DD"                                          # Request date in YYYY-MM-DD
+complete_date <- "YYYY-MM-DD"                                          # Expected complete date in YYYY-MM-DD
+
+# Pick from (table, listing, figure)
+format <- "Tables and Figures"                                         # Delivery format
+```
+
+---
+author: `r developer`
+---
+
+# TLF Requirements Specifications 
+
+## Summary 
+* Description: Extrapolation of survival probabilities for PROJECT X
+* Requestor: `r requestor`
+* Output type: `r type` 
+* Output format: `r format`
+* Request date: `r request_date`
+* Target completion date: `r complete_date`
+
+# Analysis Program
+
+## R package used for analysis: 
+
+mkanr is an internal standard R package to generate survival extrapolation Analysis
+and Reporting RTF package.
+
+
+```{r, message = FALSE}
+library(mkanr)
+data(adsl)
+data(adtte)
+library(rlang)
+```
+
+## Metadata used for analysis: 
+
+> Developer shall update the parameters in this section as per their project needs
+
+```{r, mkanr}
+# Data path
+population_from = adsl     
+observation_from = adtte
+
+# Treatment variable
+therapy_var="TRT01P"
+therapy_var_label="Planned Treatment for Period 01"
+control_arm="A: Drug X" #arm will be the reference arm in models
+active_arm="B: Placebo"
+
+# Population
+population_where_arm1 = quo(ITTFL == "Y" & TRT01P==control_arm)
+population_where_arm2 = quo(ITTFL == "Y" & TRT01P==active_arm)
+rtf_title_pop = c("(Intention-to-Treat Population)")
+
+# Endpoint
+observation_where = quo(PARAMCD == "OS")
+param = "Overall Survival"
+
+# Analysis variable
+time = "AVAL"  #Time information variable (assumed to be in Days)
+time_unit = "W"  #Unit used to run the entire analysis
+
+# Other
+rtf_footnote_pop = c("Database Cutoff Date: XXX")       #Footnote added to all outputs
+rtf_prefix_arm1= paste0("survce0","arm10", "os0")  
+rtf_prefix_arm2= paste0("survce0","arm20", "os0") 
+
+#Extrapolation specific
+models_title_stdflex="Standard Parametric and Flexible Parametric Spline"  #used in rtf titles
+
+parametric_list<-list(`Exponential`="exp",           #list order equal order in outputs
+                      `Weibull`="weibull",           #left hand side is the label used in output
+                      `Log-normal`="lognormal",      #right hand side is dist parameter in flexsurvreg
+                      `Log-logistic`="llogis",
+                      `Gompertz`="gompertz", 
+                      `Gamma`="gamma", 
+                      `Generalized Gamma`="gengamma")
+
+spline_list<-list()
+
+time_horizon = c("20 Years")                        #used in rtf titles
+predict_time = 1:1040                               #linked to time_unit (1040 weeks = 20 years)
+
+```
+
+### One-arm (Independent model)
+
+```{r, eval = TRUE}
+hta_flexsurv(population_from = population_from,
+             population_where = !!enquo(population_where_arm1),
+             observation_from =observation_from,
+             observation_where = !!enquo(observation_where),
+             therapy_data_var = list(name=therapy_var,
+                                     name_label=therapy_var_label,
+                                     levels=c(control_arm,active_arm),
+                                     labels=c(control_arm,active_arm)),
+             time = time,
+             time_unit = time_unit,
+             parametric_list = parametric_list,
+             spline_list = spline_list,
+             predict_time = predict_time,
+             rtf_meta =fct_rtf_meta(output_suffix=list("all"),
+                              rtf_title_pop=rtf_title_pop,
+                              rtf_footnote_pop=rtf_footnote_pop,
+                              param=param,
+                              therapy_data_var= therapy_data_var,
+                              models_title=models_title_stdflex,
+                              therapy_arm=levels(tte[[therapy_data_var$name]]),
+                              time_horizon = time_horizon,
+                              output_suffix_update = list(),
+                              rtf_param=list(),
+                              modified_value=list()),
+             rtf_prefix = rtf_prefix_arm1,
+             id_analysis=c('e0stdflex0gof','e0stdflex0fig0timelong','e0stdflex0fig0timeshort'),
+             outdata_path = path$outdata,
+             outgraph_path = path$outgraph,
+             outtable_path = path$outtable)
+
+```
+### One-arm (Independent model)
+
+```{r, eval = TRUE}
+hta_flexsurv(population_from = population_from,
+             population_where = !!enquo(population_where_arm2),
+             observation_from =observation_from,
+             observation_where = !!enquo(observation_where),
+             therapy_data_var = list(name=therapy_var,
+                                     name_label=therapy_var_label,
+                                     levels=c(control_arm,active_arm),
+                                     labels=c(control_arm,active_arm)),
+             time = time,
+             time_unit = time_unit,
+             parametric_list = parametric_list,
+             spline_list = spline_list,
+             predict_time = predict_time,
+             rtf_meta =fct_rtf_meta(output_suffix=list("all"),
+                              rtf_title_pop=rtf_title_pop,
+                              rtf_footnote_pop=rtf_footnote_pop,
+                              param=param,
+                              therapy_data_var= therapy_data_var,
+                              models_title=models_title_stdflex,
+                              therapy_arm=levels(tte[[therapy_data_var$name]]),
+                              time_horizon = time_horizon,
+                              output_suffix_update = list(),
+                              rtf_param=list(),
+                              modified_value=list()),
+             rtf_prefix = rtf_prefix_arm2,
+             id_analysis=c('e0stdflex0gof','e0stdflex0fig0timelong','e0stdflex0fig0timeshort'),
+             outdata_path = path$outdata,
+             outgraph_path = path$outgraph,
+             outtable_path = path$outtable)
+
+```
+
+# Session Information
+
+> Display session information to enhance reproducibility.
+
+```{r}
+sessionInfo()
+```
